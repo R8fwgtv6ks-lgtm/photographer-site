@@ -7,7 +7,7 @@ A.rRes = function (ct) {
     return IDB.all('res').then(function (items) {
       var html = '<div class="lib-panel"><div class="lib-head"><div class="lib-top"><div><div class="lib-title">资源库</div><div class="lib-sub">发送给客户的图文资料</div></div><button class="bt bt-p bt-s" onclick="A.editRCat()">' + IC('i-plus') + '分类</button></div></div><div class="lib-filters">';
       html += '<button class="bt bt-gh bt-s' + (!A.rcf ? ' active' : '') + '" onclick="A.rcf=null;A.rLib()">全部</button>';
-      for (var i = 0; i < cats.length; i++) { html += '<button class="bt bt-gh bt-s' + (A.rcf === cats[i].id ? ' active' : '') + '" onclick="A.rcf=\'' + cats[i].id + '\';A.rLib()">' + cats[i].name + '</button>'; }
+      for (var i = 0; i < cats.length; i++) { html += '<button class="bt bt-gh bt-s' + (A.rcf === cats[i].id ? ' active' : '') + '" onclick="if(A.rcf===\'' + cats[i].id + '\')A.editRCat(\'' + cats[i].id + '\');else{A.rcf=\'' + cats[i].id + '\';A.rLib()}">' + cats[i].name + '</button>'; }
       html += '</div><div class="lib-actions"><button class="bt bt-o bt-s bt-fw" onclick="A.editRes()">' + IC('i-plus') + '添加资源</button></div>';
       var f = A.rcf ? items.filter(function (x) { return x.catId === A.rcf; }) : items;
       if (f.length === 0) { html += '<div class="emp lib-empty"><div class="ei">' + IC('i-folder') + '</div>暂无资源</div>'; }
@@ -59,7 +59,7 @@ A.editRes = function (id) {
 
 A.prevResImg = function () {
   var f = document.getElementById('efResImg').files[0]; if (!f) return;
-  return compressImg(f, 800, 0.7).then(function (dataUrl) {
+  return compressImg(f, 1600, 0.85).then(function (dataUrl) {
     document.getElementById('efResPrev').innerHTML = '<img src="' + dataUrl + '">';
   });
 };
@@ -69,7 +69,7 @@ A.saveRes = function (id, oldImg) {
   var catId = document.getElementById('efResCat').value;
   var fi = document.getElementById('efResImg');
   var img = oldImg || '';
-  var p = fi.files[0] ? compressImg(fi.files[0], 800, 0.7) : Promise.resolve(img);
+  var p = fi.files[0] ? compressImg(fi.files[0], 1600, 0.85) : Promise.resolve(img);
   return p.then(function (imgData) {
     if (!name && !imgData) { TOAST('请填写名称或上传图片'); return; }
     if (id) { return IDB.get('res', id).then(function (r) { if (r) { r.name = name; r.catId = catId; r.img = imgData; return IDB.put('res', r); } }).then(function () { document.querySelector('.mo').remove(); A.rLib(); TOAST('已保存'); }); }
@@ -86,7 +86,7 @@ A.viewRes = function (id) {
   return IDB.get('res', id).then(function (r) {
     if (!r || !r.img) return;
     var v = document.createElement('div'); v.className = 'iv';
-    v.innerHTML = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '"><div class="viewer-meta"><div class="viewer-bar"><div class="viewer-copy"><div class="viewer-title">' + (r.name || '未命名资源') + '</div><div class="viewer-sub">资源预览</div></div><button class="bt bt-xs bt-dr" style="color:#fff;border-color:rgba(255,255,255,.4)" onclick="event.stopPropagation();A.delRes(\'' + r.id + '\');this.closest(\'.iv\').remove()">' + IC('i-trash') + '删除</button></div></div>';
+    v.innerHTML = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '" ondblclick="var iv=this.closest('.iv');if(iv)iv.classList.toggle('zoomed')" title="双击放大/缩小"><div class="viewer-meta"><div class="viewer-bar"><div class="viewer-copy"><div class="viewer-title">' + (r.name || '未命名资源') + '</div><div class="viewer-sub">资源预览 · 双击放大</div></div><button class="bt bt-xs bt-dr" style="color:#fff;border-color:rgba(255,255,255,.4)" onclick="event.stopPropagation();A.delRes(\'' + r.id + '\');this.closest(\'.iv\').remove()">' + IC('i-trash') + '删除</button></div></div>';
     document.body.appendChild(v);
     v.addEventListener('click', function (e) { if (e.target === v) v.remove(); });
   });
