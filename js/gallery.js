@@ -75,7 +75,7 @@ A.viewRef = function (id) {
       document.body.appendChild(v);
       var img = v.querySelector('img');
       if (img) {
-        img.addEventListener('dblclick', function (e) {
+        img.addEventListener('click', function (e) {
           e.stopPropagation();
           v.classList.toggle('zoomed');
         });
