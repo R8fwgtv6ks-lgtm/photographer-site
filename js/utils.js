@@ -64,10 +64,10 @@ function IC(name, cls) {
   return '<svg class="' + (cls || 'ui-ic') + '"><use href="#' + name + '"></use></svg>';
 }
 
-/** 图片压缩 base64 */
+/** 图片压缩 base64 — 高质量模式（抗锯齿+高分辨率） */
 function compressImg(file, mw, q) {
-  mw = mw || 600;
-  q = q || 0.65;
+  mw = mw || 1400;
+  q = q || 0.85;
   return new Promise(function (ok) {
     var reader = new FileReader();
     reader.onload = function (e) {
@@ -75,10 +75,13 @@ function compressImg(file, mw, q) {
       img.onload = function () {
         var c = document.createElement('canvas');
         var w = img.width, h = img.height;
-        if (w > mw) { h = h * mw / w; w = mw; }
+        if (w > mw) { h = Math.round(h * mw / w); w = mw; }
         c.width = w;
         c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        var ctx = c.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
         ok(c.toDataURL('image/jpeg', q));
       };
       img.src = e.target.result;
