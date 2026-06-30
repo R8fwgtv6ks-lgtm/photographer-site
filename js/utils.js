@@ -64,7 +64,7 @@ function IC(name, cls) {
   return '<svg class="' + (cls || 'ui-ic') + '"><use href="#' + name + '"></use></svg>';
 }
 
-/** 图片压缩 base64 — 高质量模式（抗锯齿+高分辨率） */
+/** 图片压缩 base64 — 高画质模式（抗锯齿） */
 function compressImg(file, mw, q) {
   mw = mw || 1400;
   q = q || 0.85;
@@ -80,7 +80,6 @@ function compressImg(file, mw, q) {
         c.height = h;
         var ctx = c.getContext('2d');
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, w, h);
         ok(c.toDataURL('image/jpeg', q));
       };
