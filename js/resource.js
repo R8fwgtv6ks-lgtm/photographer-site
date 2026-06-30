@@ -86,8 +86,15 @@ A.viewRes = function (id) {
   return IDB.get('res', id).then(function (r) {
     if (!r || !r.img) return;
     var v = document.createElement('div'); v.className = 'iv';
-    v.innerHTML = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '" ondblclick="var iv=this.closest('.iv');if(iv)iv.classList.toggle('zoomed')" title="双击放大/缩小"><div class="viewer-meta"><div class="viewer-bar"><div class="viewer-copy"><div class="viewer-title">' + (r.name || '未命名资源') + '</div><div class="viewer-sub">资源预览 · 双击放大</div></div><button class="bt bt-xs bt-dr" style="color:#fff;border-color:rgba(255,255,255,.4)" onclick="event.stopPropagation();A.delRes(\'' + r.id + '\');this.closest(\'.iv\').remove()">' + IC('i-trash') + '删除</button></div></div>';
+    v.innerHTML = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '"><div class="viewer-meta"><div class="viewer-bar"><div class="viewer-copy"><div class="viewer-title">' + (r.name || '未命名资源') + '</div><div class="viewer-sub">资源预览 · 双击放大</div></div><button class="bt bt-xs bt-dr" style="color:#fff;border-color:rgba(255,255,255,.4)" onclick="event.stopPropagation();A.delRes(\'' + r.id + '\');this.closest(\'.iv\').remove()">' + IC('i-trash') + '删除</button></div></div>';
     document.body.appendChild(v);
+    var img = v.querySelector('img');
+    if (img) {
+      img.addEventListener('dblclick', function (e) {
+        e.stopPropagation();
+        v.classList.toggle('zoomed');
+      });
+    }
     v.addEventListener('click', function (e) { if (e.target === v) v.remove(); });
   });
 };
