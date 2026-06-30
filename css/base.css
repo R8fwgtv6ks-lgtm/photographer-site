@@ -1,0 +1,46 @@
+/* ============================================================
+   Base — 全局重置 & 基础样式
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  background:
+    radial-gradient(circle at 50% -12%, rgba(255, 255, 255, 0.95) 0, rgba(255, 255, 255, 0) 34%),
+    linear-gradient(180deg, #fffcf7 0%, var(--bg) 42%, #f7efe6 100%);
+  color: var(--txt);
+  line-height: var(--lh);
+  -webkit-font-smoothing: antialiased;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: calc(var(--nv) + 24px);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  font-size: var(--fs-md);
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  -webkit-font-smoothing: inherit;
+}
+
+button {
+  touch-action: manipulation;
+}
