@@ -7,7 +7,7 @@ A.rRef = function (ct) {
     return IDB.all('ref').then(function (items) {
       var html = '<div class="lib-panel"><div class="lib-head"><div class="lib-top"><div><div class="lib-title">参考图库</div><div class="lib-sub">收集拍摄风格、构图和灵感片段</div></div><button class="bt bt-p bt-s" onclick="A.editRFCat()">' + IC('i-plus') + '分类</button></div></div><div class="lib-filters">';
       html += '<button class="bt bt-gh bt-s' + (!A.refCf ? ' active' : '') + '" onclick="A.refCf=null;A.rLib()">全部</button>';
-      for (var i = 0; i < cats.length; i++) { html += '<button class="bt bt-gh bt-s' + (A.refCf === cats[i].id ? ' active' : '') + '" onclick="A.refCf=\'' + cats[i].id + '\';A.rLib()">' + cats[i].name + '</button>'; }
+      for (var i = 0; i < cats.length; i++) { html += '<button class="bt bt-gh bt-s' + (A.refCf === cats[i].id ? ' active' : '') + '" onclick="if(A.refCf===\'' + cats[i].id + '\')A.editRFCat(\'' + cats[i].id + '\');else{A.refCf=\'' + cats[i].id + '\';A.rLib()}">' + cats[i].name + '</button>'; }
       html += '</div>';
       html += '<div class="lib-actions"><button class="bt bt-o bt-s bt-fw" onclick="document.getElementById(\'refUp\').click()">' + IC('i-upload') + '上传参考图</button></div><input type="file" id="refUp" accept="image/*" multiple style="display:none">';
       var f = A.refCf ? items.filter(function (x) { return (x.catIds || []).indexOf(A.refCf) >= 0; }) : items;
@@ -52,7 +52,7 @@ A.upRefs = function (e) {
   var files = e.target.files; if (!files.length) return;
   var ps = [];
   for (var i = 0; i < files.length; i++) {
-    ps.push(compressImg(files[i], 600, 0.6).then(function (dataUrl) {
+    ps.push(compressImg(files[i], 1400, 0.85).then(function (dataUrl) {
       return IDB.put('ref', { id: U(), catIds: [], img: dataUrl, notes: '', fav: false, createdAt: new Date().toISOString() });
     }));
   }
@@ -64,7 +64,7 @@ A.viewRef = function (id) {
     if (!r) return;
     return IDB.all('rfcat').then(function (cats) {
       var v = document.createElement('div'); v.className = 'iv';
-      var html = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '"><div class="viewer-meta">';
+      var html = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '" ondblclick="var iv=this.closest('.iv');if(iv)iv.classList.toggle('zoomed')" title="双击放大/缩小"><div class="viewer-meta">';
       html += '<div class="viewer-tags">';
       for (var i = 0; i < cats.length; i++) {
         var sel = (r.catIds || []).indexOf(cats[i].id) >= 0;
