@@ -1,4 +1,4 @@
-const CACHE = 'pw-v2';
+const CACHE = 'pw-v3';
 self.addEventListener('install', e => {
   e.waitUntil(caches.delete('photographer-v1').then(() => caches.open(CACHE)));
 });
