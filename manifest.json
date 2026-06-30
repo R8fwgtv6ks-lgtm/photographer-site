@@ -1,0 +1,9 @@
+{
+  "name": "独立摄影师工作台",
+  "short_name": "摄影工作台",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#c4956a",
+  "background_color": "#faf8f5"
+}
