@@ -64,7 +64,7 @@ A.viewRef = function (id) {
     if (!r) return;
     return IDB.all('rfcat').then(function (cats) {
       var v = document.createElement('div'); v.className = 'iv';
-      var html = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '" ondblclick="var iv=this.closest('.iv');if(iv)iv.classList.toggle('zoomed')" title="双击放大/缩小"><div class="viewer-meta">';
+      var html = '<button class="cv" onclick="this.parentElement.remove()">' + IC('i-close') + '</button><img src="' + r.img + '"><div class="viewer-meta">';
       html += '<div class="viewer-tags">';
       for (var i = 0; i < cats.length; i++) {
         var sel = (r.catIds || []).indexOf(cats[i].id) >= 0;
@@ -73,6 +73,13 @@ A.viewRef = function (id) {
       html += '</div><input class="fi" id="vrNote" value="' + (r.notes || '') + '" placeholder="记录构图、光线或关键词..." style="background:rgba(255,255,255,.9)"><div class="viewer-actions"><button class="bt bt-xs ' + (r.fav ? 'bt-p' : 'bt-o') + '" onclick="A.togRefFav(\'' + r.id + '\')">' + IC('i-star') + (r.fav ? '已收藏' : '收藏') + '</button><button class="bt bt-xs bt-dr" onclick="A.delRef(\'' + r.id + '\');this.closest(\'.iv\').remove()">' + IC('i-trash') + '删除</button></div></div>';
       v.innerHTML = html;
       document.body.appendChild(v);
+      var img = v.querySelector('img');
+      if (img) {
+        img.addEventListener('dblclick', function (e) {
+          e.stopPropagation();
+          v.classList.toggle('zoomed');
+        });
+      }
       v.addEventListener('click', function (e) { if (e.target === v) v.remove(); });
       setTimeout(function () {
         var n = document.getElementById('vrNote'); if (n) n.onchange = function () { A.setRefNote(r.id, this.value); };
